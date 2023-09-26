@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     private GameObject _level;
     public List<GameObject> levels;
     public GameObject playerPrefab;
+    public bool startInDebugMode;
 
     void Start()
     {
@@ -18,7 +19,16 @@ public class GameController : MonoBehaviour
 
     public void StartLevel()
     {
-        _level = Instantiate(levels[_currentLevel]);
+        if (startInDebugMode)
+        {
+            GameObject[] allObjects = FindObjectsOfType<GameObject>();
+            _level = allObjects[allObjects.Length - 3];
+            Debug.Log(_level.name);
+        }
+        else
+        {
+            _level = Instantiate(levels[_currentLevel]);
+        }
         CreatePlayerOnStart();
     }
 
