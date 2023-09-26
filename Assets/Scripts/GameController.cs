@@ -23,7 +23,6 @@ public class GameController : MonoBehaviour
         {
             GameObject[] allObjects = FindObjectsOfType<GameObject>();
             _level = allObjects[allObjects.Length - 3];
-            Debug.Log(_level.name);
         }
         else
         {

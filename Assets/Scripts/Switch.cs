@@ -5,6 +5,7 @@ using UnityEngine;
 public class Switch : MonoBehaviour
 {
     private GameController _gameController;
+    public GameObject ToggleableObject;
 
     void Awake()
     {
@@ -13,6 +14,6 @@ public class Switch : MonoBehaviour
 
     void OnTriggerEnter2D()
     {
-        _gameController.Win();
+        ToggleableObject.GetComponent<Toggleable>().Toggle();
     }
 }

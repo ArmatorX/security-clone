@@ -43,9 +43,6 @@ TagManager:
   - name: Background
     uniqueID: 2167833909
     locked: 0
-  - name: Interact
-    uniqueID: 2048155437
-    locked: 0
   - name: Entities
     uniqueID: 2123131987
     locked: 0
@@ -54,6 +51,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3847661969
+    locked: 0
+  - name: Interact
+    uniqueID: 2048155437
     locked: 0
   - name: TraslucentEffects
     uniqueID: 1315056993

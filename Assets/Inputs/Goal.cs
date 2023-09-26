@@ -9,8 +9,9 @@ public class Goal : MonoBehaviour
         _gameController = GameObject.Find("GameController").GetComponent<GameController>();
     }
 
-    void OnTriggerEnter2D()
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        _gameController.Win();
+        if (collision.tag == "Player")
+            _gameController.Win();
     }
 }
