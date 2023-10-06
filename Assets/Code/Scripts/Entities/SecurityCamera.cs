@@ -6,7 +6,7 @@ public class SecurityCamera : MonoBehaviour, EntityWithCoV, Toggleable
 
     public void OnSeenPlayer()
     {
-        GameObject.Find("GameController").GetComponent<GameController>().Lose();
+        AlwaysOnScene.GameController.Lose();
     }
 
     public void Toggle()

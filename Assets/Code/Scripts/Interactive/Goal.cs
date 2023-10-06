@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Goal : MonoBehaviour
 {
-    private GameController _gameController;
+    private Controller _gameController;
 
     void Awake()
     {
-        _gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        _gameController = AlwaysOnScene.GameController;
     }
 
     void OnTriggerEnter2D(Collider2D collision)

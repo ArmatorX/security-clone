@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviour, Controller
 {
     private GameObject _player;
     private int _currentLevel = 0;
@@ -12,7 +10,7 @@ public class GameController : MonoBehaviour
     public GameObject playerPrefab;
     public bool startInDebugMode;
 
-    void Start()
+    public void Start()
     {
         StartLevel();
     }

@@ -110,7 +110,7 @@ public class Enemy : MonoBehaviour, EntityWithCoV
     }
     public void OnSeenPlayer()
     {
-        GameObject.Find("GameController").GetComponent<GameController>().Lose();
+        AlwaysOnScene.GameController.Lose();
     }
 }
 

@@ -13,6 +13,7 @@ public class DummyWithCoV : MonoBehaviour, EntityWithCoV
     }
 }
 
+[TestFixture]
 public class DummyWithCoVTest
 {
     private GameObject dummyMock;
@@ -25,14 +26,14 @@ public class DummyWithCoVTest
     }
 
     [Test]
-    public void ShouldNotChangePropertyWhenOnSeenPlayerHasNotBeenCalled()
+    public void OnSeenPlayer_NotCalled_HasCalledOnSeenPlayerFalse()
     {
         var dummyWithCoV = dummyMock.GetComponent<DummyWithCoV>();
         Assert.IsFalse(dummyWithCoV.HasCalledOnSeenPlayer);
     }
 
     [Test]
-    public void ShouldChangePropertyWhenOnSeenPlayerHasBeenCalled()
+    public void OnSeenPlayer_Called_HasCalledOnSeenPlayerTrue()
     {
         var dummyWithCoV = dummyMock.GetComponent<DummyWithCoV>();
         dummyWithCoV.OnSeenPlayer();

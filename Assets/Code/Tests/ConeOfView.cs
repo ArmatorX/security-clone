@@ -26,7 +26,7 @@ public class ConeOfViewClass
     }
 
     [Test]
-    public void ShouldGetParentEntity()
+    public void Entity_FirstCall_NotNull()
     {
         var entity = coneOfView.GetComponent<ConeOfView>().Entity;
 
@@ -36,7 +36,7 @@ public class ConeOfViewClass
     }
 
     [Test]
-    public void ShouldCallOnSeenPlayerWhenPlayerCollidesWithIt()
+    public void OnTriggerEnter2D_CollidesWithPlayer_CallOnSeenPlayer()
     {
         var playerCollider = objectWithCollider.GetComponent<CircleCollider2D>();
         playerCollider.tag = "Player";
@@ -47,7 +47,7 @@ public class ConeOfViewClass
     }
 
     [Test]
-    public void ShouldNotCallOnSeenPlayerWhenOtherEntitiesCollideWithIt()
+    public void OnTriggerEnter2D_CollidesWithEntity_NotCallOnSeenPlayer()
     {
         var playerCollider = objectWithCollider.GetComponent<CircleCollider2D>();
         playerCollider.tag = "Entities";
@@ -85,12 +85,12 @@ public class ConeOfViewPrefab
     {
         foreach (GameObject o in GameObject.FindObjectsOfType<GameObject>())
         {
-            GameObject.Destroy(o.gameObject);
+            GameObject.DestroyImmediate(o.gameObject);
         }
     }
 
     [Test]
-    public void ShouldGetParentEntity()
+    public void Entity_FirstCall_NotNull()
     {
         var entity = coneOfView.GetComponent<ConeOfView>().Entity;
 
@@ -100,7 +100,7 @@ public class ConeOfViewPrefab
     }
 
     [UnityTest]
-    public IEnumerator ShouldCallOnSeenPlayerWhenPlayerCollidesWithIt()
+    public IEnumerator OnTriggerEnter2D_CollidesWithPlayer_CallOnSeenPlayer()
     {
         GameObject.Instantiate(spyPrefab, Vector3.zero, Quaternion.identity);
 
@@ -110,7 +110,7 @@ public class ConeOfViewPrefab
     }
 
     [UnityTest]
-    public IEnumerator ShouldNotCallOnSeenPlayerWhenOtherEntitiesCollideWithIt()
+    public IEnumerator OnTriggerEnter2D_CollidesWithWall_NotCallOnSeenPlayer()
     {
         GameObject.Instantiate(wallPrefab, Vector3.zero, Quaternion.identity);
 
