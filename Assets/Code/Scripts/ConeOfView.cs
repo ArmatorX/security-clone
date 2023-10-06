@@ -3,7 +3,7 @@ using UnityEngine;
 public class ConeOfView : MonoBehaviour
 {
     private EntityWithCoV _entity;
-    private EntityWithCoV entity
+    public EntityWithCoV Entity
     {
         get 
         {
@@ -19,6 +19,6 @@ public class ConeOfView : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
-            entity.OnSeenPlayer();
+            Entity.OnSeenPlayer();
     }
 }
