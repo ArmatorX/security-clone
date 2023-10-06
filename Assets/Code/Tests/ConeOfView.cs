@@ -1,34 +1,34 @@
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 
 [TestFixture]
 public class ConeOfViewClass
 {
-    private GameObject coneOfViewMock;
-    private GameObject objectWithColliderMock;
-    private GameObject entityWithCoVMock;
+    private GameObject coneOfView;
+    private GameObject objectWithCollider;
+    private GameObject entityWithCoV;
 
     [SetUp]
     public void SetUp()
     {
-        entityWithCoVMock = new GameObject("EntityWithCoV");
-        entityWithCoVMock.AddComponent<DummyWithCoV>();
+        entityWithCoV = new GameObject("EntityWithCoV");
+        entityWithCoV.AddComponent<DummyWithCoV>();
 
-        coneOfViewMock = new GameObject("coneOfView");
-        coneOfViewMock.AddComponent<ConeOfView>();
-        coneOfViewMock.transform.parent = entityWithCoVMock.transform;
+        coneOfView = new GameObject("coneOfView");
+        coneOfView.AddComponent<ConeOfView>();
+        coneOfView.transform.parent = entityWithCoV.transform;
 
-        objectWithColliderMock = new GameObject("ObjectWithCollider");
-        objectWithColliderMock.AddComponent<CircleCollider2D>();
+        objectWithCollider = new GameObject("ObjectWithCollider");
+        objectWithCollider.AddComponent<CircleCollider2D>();
     }
 
     [Test]
     public void ShouldGetParentEntity()
     {
-        var entity = coneOfViewMock.GetComponent<ConeOfView>().Entity;
+        var entity = coneOfView.GetComponent<ConeOfView>().Entity;
 
         Assert.IsNotNull(entity);
         Assert.IsInstanceOf<EntityWithCoV>(entity);
@@ -38,38 +38,84 @@ public class ConeOfViewClass
     [Test]
     public void ShouldCallOnSeenPlayerWhenPlayerCollidesWithIt()
     {
-        var playerCollider = objectWithColliderMock.GetComponent<CircleCollider2D>();
+        var playerCollider = objectWithCollider.GetComponent<CircleCollider2D>();
         playerCollider.tag = "Player";
 
-        coneOfViewMock.GetComponent<ConeOfView>().OnTriggerEnter2D(playerCollider);
+        coneOfView.GetComponent<ConeOfView>().OnTriggerEnter2D(playerCollider);
 
-        Assert.IsTrue(entityWithCoVMock.GetComponent<DummyWithCoV>().HasCalledOnSeenPlayer);
+        Assert.IsTrue(entityWithCoV.GetComponent<DummyWithCoV>().HasCalledOnSeenPlayer);
     }
 
     [Test]
     public void ShouldNotCallOnSeenPlayerWhenOtherEntitiesCollideWithIt()
     {
-        var playerCollider = objectWithColliderMock.GetComponent<CircleCollider2D>();
+        var playerCollider = objectWithCollider.GetComponent<CircleCollider2D>();
         playerCollider.tag = "Entities";
 
-        coneOfViewMock.GetComponent<ConeOfView>().OnTriggerEnter2D(playerCollider);
+        coneOfView.GetComponent<ConeOfView>().OnTriggerEnter2D(playerCollider);
 
-        Assert.IsFalse(entityWithCoVMock.GetComponent<DummyWithCoV>().HasCalledOnSeenPlayer);
+        Assert.IsFalse(entityWithCoV.GetComponent<DummyWithCoV>().HasCalledOnSeenPlayer);
     }
 }
 
+[TestFixture]
 public class ConeOfViewPrefab
 {
+    private GameObject spyPrefab;
+    private GameObject coneOfViewPrefab;
+    private GameObject wallPrefab;
     private GameObject coneOfView;
+    private GameObject entityWithCoV;
 
     [SetUp]
     public void SetUp()
     {
+        spyPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Level/Prefabs/Spy.prefab");
+        coneOfViewPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Level/Prefabs/ConeOfView.prefab");
+        wallPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Level/Prefabs/LevelElements/Wall.prefab");
+
+        entityWithCoV = new GameObject("EntityWithCoV");
+        entityWithCoV.AddComponent<DummyWithCoV>();
+
+        coneOfView = GameObject.Instantiate(coneOfViewPrefab, Vector3.zero, Quaternion.identity, entityWithCoV.transform);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        foreach (GameObject o in GameObject.FindObjectsOfType<GameObject>())
+        {
+            GameObject.Destroy(o.gameObject);
+        }
     }
 
     [Test]
-    public void ShouldCallOnSeenPlayerWhenPlayerCollidesWithIt()
+    public void ShouldGetParentEntity()
     {
+        var entity = coneOfView.GetComponent<ConeOfView>().Entity;
 
+        Assert.IsNotNull(entity);
+        Assert.IsInstanceOf<EntityWithCoV>(entity);
+        Assert.IsInstanceOf<MonoBehaviour>(entity);
+    }
+
+    [UnityTest]
+    public IEnumerator ShouldCallOnSeenPlayerWhenPlayerCollidesWithIt()
+    {
+        GameObject.Instantiate(spyPrefab, Vector3.zero, Quaternion.identity);
+
+        yield return null;
+
+        Assert.IsTrue(entityWithCoV.GetComponent<DummyWithCoV>().HasCalledOnSeenPlayer);
+    }
+
+    [UnityTest]
+    public IEnumerator ShouldNotCallOnSeenPlayerWhenOtherEntitiesCollideWithIt()
+    {
+        GameObject.Instantiate(wallPrefab, Vector3.zero, Quaternion.identity);
+
+        yield return null;
+
+        Assert.IsFalse(entityWithCoV.GetComponent<DummyWithCoV>().HasCalledOnSeenPlayer);
     }
 }

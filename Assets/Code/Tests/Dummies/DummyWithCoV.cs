@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using NUnit.Framework;
 
 public class DummyWithCoV : MonoBehaviour, EntityWithCoV
