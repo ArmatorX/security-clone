@@ -25,6 +25,12 @@ public class DummyWithCoVTest
         dummyMock.AddComponent<DummyWithCoV>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        GameObject.DestroyImmediate(dummyMock);
+    }
+
     [Test]
     public void OnSeenPlayer_NotCalled_HasCalledOnSeenPlayerFalse()
     {

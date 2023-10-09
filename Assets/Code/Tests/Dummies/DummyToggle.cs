@@ -25,6 +25,12 @@ public class DummyToggleTest
         dummyMock.AddComponent<DummyToggle>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        GameObject.DestroyImmediate(dummyMock);
+    }
+
     [Test]
     public void Toggle_NotCalled_HasCalledToggleFalse()
     {

@@ -22,6 +22,14 @@ public class SecurityCameraClass
         gameController.AddComponent<DummyController>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        GameObject.DestroyImmediate(securityCamera.ConeOfView);
+        GameObject.DestroyImmediate(goSecurityCamera);
+        GameObject.DestroyImmediate(gameController);
+    }
+
     [Test]
     public void OnSeenPlayer_CallLose() 
     {
@@ -54,6 +62,7 @@ public class SecurityCameraPrefab
     private GameObject wallPrefab;
     private GameObject securityCamera;
     private GameObject gameController;
+    private GameObject spy;
 
     [SetUp]
     public void SetUp()
@@ -71,16 +80,15 @@ public class SecurityCameraPrefab
     [TearDown]
     public void TearDown()
     {
-        foreach (GameObject o in GameObject.FindObjectsOfType<GameObject>())
-        {
-            GameObject.DestroyImmediate(o.gameObject);
-        }
+        GameObject.DestroyImmediate(securityCamera);
+        GameObject.DestroyImmediate(gameController);
+        GameObject.DestroyImmediate(spy);
     }
 
     [UnityTest]
     public IEnumerator OnPlayerSeen_PlayerHitsConeOfView_Lose()
     {
-        GameObject.Instantiate(spyPrefab, Vector3.right, Quaternion.identity);
+        spy = GameObject.Instantiate(spyPrefab, Vector3.right, Quaternion.identity);
 
         yield return new WaitForFixedUpdate();
 
@@ -90,7 +98,7 @@ public class SecurityCameraPrefab
     [UnityTest]
     public IEnumerator OnPlayerSeen_WallHitsConeOfView_NotCallLose()
     {
-        GameObject.Instantiate(wallPrefab, Vector3.right, Quaternion.identity);
+        spy = GameObject.Instantiate(wallPrefab, Vector3.right, Quaternion.identity);
 
         yield return new WaitForFixedUpdate();
 
@@ -101,7 +109,7 @@ public class SecurityCameraPrefab
     public IEnumerator OnToggle_PlayerHitsConeOfView_DontCallLose()
     {
         securityCamera.GetComponent<SecurityCamera>().Toggle();
-        var player = GameObject.Instantiate(spyPrefab, Vector3.right, Quaternion.identity);
+        spy = GameObject.Instantiate(spyPrefab, Vector3.right, Quaternion.identity);
 
         yield return new WaitForFixedUpdate();
 

@@ -26,6 +26,14 @@ public class SwitchClass
         objectWithCollider.AddComponent<CircleCollider2D>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        GameObject.DestroyImmediate(goSwitch);
+        GameObject.DestroyImmediate(goToggleable);
+        GameObject.DestroyImmediate(objectWithCollider);
+    }
+
     [Test]
     public void OnTriggerEnter2D_PlayerPressedSwitch_CallToggle()
     {
@@ -59,6 +67,7 @@ public class SwitchPrefab
 
     public GameObject sswitch;
     public GameObject securityCamera;
+    public GameObject player;
 
     [SetUp]
     public void SetUp()
@@ -76,16 +85,15 @@ public class SwitchPrefab
     [TearDown]
     public void TearDown()
     {
-        foreach (GameObject o in GameObject.FindObjectsOfType<GameObject>())
-        {
-            GameObject.DestroyImmediate(o.gameObject);
-        }
+        GameObject.DestroyImmediate(sswitch);
+        GameObject.DestroyImmediate(securityCamera);
+        GameObject.DestroyImmediate(player);
     }
 
     [UnityTest]
     public IEnumerator OnTriggerEnter2D_PlayerPressedSwitch_DisableCameraCoV()
     {
-        GameObject.Instantiate(spyPrefab, new Vector3(10, 10), Quaternion.identity);
+        player = GameObject.Instantiate(spyPrefab, new Vector3(10, 10), Quaternion.identity);
         
         yield return new WaitForFixedUpdate();
 
@@ -95,7 +103,7 @@ public class SwitchPrefab
     [UnityTest]
     public IEnumerator OnTriggerEnter2D_EntityPressedSwitch_CameraCoVUnaltered()
     {
-        GameObject.Instantiate(wallPrefab, new Vector3(10, 10), Quaternion.identity);
+        player = GameObject.Instantiate(wallPrefab, new Vector3(10, 10), Quaternion.identity);
 
         yield return new WaitForFixedUpdate();
 

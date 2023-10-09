@@ -51,6 +51,12 @@ public class DummyControllerTest
         controllerMock.AddComponent<DummyController>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        GameObject.DestroyImmediate(controllerMock);
+    }
+
     [Test]
     public void DummyController_Instanced_HasCalledAllFalse()
     {

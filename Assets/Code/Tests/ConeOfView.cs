@@ -25,6 +25,14 @@ public class ConeOfViewClass
         objectWithCollider.AddComponent<CircleCollider2D>();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        GameObject.DestroyImmediate(entityWithCoV);
+        GameObject.DestroyImmediate(coneOfView);
+        GameObject.DestroyImmediate(objectWithCollider);
+    }
+
     [Test]
     public void Entity_FirstCall_NotNull()
     {
@@ -66,6 +74,7 @@ public class ConeOfViewPrefab
     private GameObject wallPrefab;
     private GameObject coneOfView;
     private GameObject entityWithCoV;
+    private GameObject entity;
 
     [SetUp]
     public void SetUp()
@@ -83,10 +92,9 @@ public class ConeOfViewPrefab
     [TearDown]
     public void TearDown()
     {
-        foreach (GameObject o in GameObject.FindObjectsOfType<GameObject>())
-        {
-            GameObject.DestroyImmediate(o.gameObject);
-        }
+        GameObject.DestroyImmediate(entityWithCoV);
+        GameObject.DestroyImmediate(coneOfView);
+        GameObject.DestroyImmediate(entity);
     }
 
     [Test]
@@ -102,7 +110,7 @@ public class ConeOfViewPrefab
     [UnityTest]
     public IEnumerator OnTriggerEnter2D_CollidesWithPlayer_CallOnSeenPlayer()
     {
-        GameObject.Instantiate(spyPrefab, Vector3.zero, Quaternion.identity);
+        entity = GameObject.Instantiate(spyPrefab, Vector3.zero, Quaternion.identity);
 
         yield return null;
 
@@ -112,7 +120,7 @@ public class ConeOfViewPrefab
     [UnityTest]
     public IEnumerator OnTriggerEnter2D_CollidesWithWall_NotCallOnSeenPlayer()
     {
-        GameObject.Instantiate(wallPrefab, Vector3.zero, Quaternion.identity);
+        entity = GameObject.Instantiate(wallPrefab, Vector3.zero, Quaternion.identity);
 
         yield return null;
 

@@ -1,20 +1,21 @@
 ﻿using NUnit.Framework;
-using System.Collections;
 using UnityEngine;
 
 [TestFixture]
 public class AlwaysOnSceneClass
 {
+    public GameObject gameController;
     [TearDown]
     public void TearDown()
     {
-        GameObject.DestroyImmediate(GameObject.Find("GameController"));
+        GameObject.DestroyImmediate(gameController);
     }
 
     [Test]
     public void GameController_Instanced_GetController()
     {
-        new GameObject("GameController").AddComponent<GameController>();
+        gameController = new GameObject("GameController");
+        gameController.AddComponent<GameController>();
         var gc = AlwaysOnScene.GameController;
 
         Assert.IsInstanceOf<GameController>(gc);
@@ -23,7 +24,8 @@ public class AlwaysOnSceneClass
     [Test]
     public void GameController_InstancedDummy_GetController()
     {
-        new GameObject("GameController").AddComponent<DummyController>();
+        gameController = new GameObject("GameController");
+        gameController.AddComponent<DummyController>();
         var gc = AlwaysOnScene.GameController;
 
         Assert.IsInstanceOf<DummyController>(gc);
