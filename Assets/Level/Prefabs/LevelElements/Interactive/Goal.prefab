@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1315056993
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.38039216, g: 0.7058824, b: 0.9529412, a: 0.39607844}
@@ -155,7 +155,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2048155437
-  m_SortingLayer: -2
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 1, b: 0, a: 1}
@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6147520012806272194}
   - component: {fileID: 6147520012806272220}
-  - component: {fileID: 6393576227461499052}
+  - component: {fileID: 7065937550687147577}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Untagged
@@ -229,7 +229,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &6393576227461499052
+--- !u!114 &7065937550687147577
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -238,6 +238,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6147520012806272222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 577f7e6cd2a9b20429a440f94d13fc84, type: 3}
+  m_Script: {fileID: 11500000, guid: 80fc0490ca05e074aaa39a4ad4fad361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
