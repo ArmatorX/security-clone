@@ -19,8 +19,7 @@ public class GameController : MonoBehaviour, Controller
     {
         if (startInDebugMode)
         {
-            GameObject[] allObjects = FindObjectsOfType<GameObject>();
-            _level = allObjects[allObjects.Length - 3];
+            _level = GameObject.Find("Level").transform.parent.gameObject;
         }
         else
         {

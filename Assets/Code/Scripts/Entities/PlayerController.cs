@@ -8,12 +8,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float speed = 5f;
 
-    void Awake()
+    private void Awake()
     {
         playerInput = new InputManagerDefault();
     }
 
-    void Start()
+    private void Start()
     {
         body = GetComponent<Rigidbody2D>();
     }

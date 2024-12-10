@@ -22,14 +22,14 @@ public class WaypointEditor : Editor
 
     public void OnSceneGUI()
     {
-        EnemyEditor.DrawRoute(waypoint.ParentEnemy);
+        EnemyEditor.DrawRoute(waypoint.parentEnemy);
         UpdateParentEnemyPosition();
     }
 
     private void UpdateParentEnemyPosition()
     {
         if (!EditorApplication.isPlaying && waypoint.IsStartingWaypoint)
-            waypoint.ParentEnemy.transform.position = waypoint.transform.position;
+            waypoint.parentEnemy.transform.position = waypoint.transform.position;
     }
 
     public static GameObject InstantiateWaypoint(Vector3 position, Enemy parent) {
@@ -37,8 +37,7 @@ public class WaypointEditor : Editor
         var prefab = parent.waypointPrefab;
         var waypoint = Instantiate(prefab, position, Quaternion.identity, level);
         var soWaypoint = new SerializedObject(waypoint.GetComponent<Waypoint>());
-        soWaypoint.FindProperty("_parentEnemy").objectReferenceValue = parent;
-        soWaypoint.FindProperty("_isStartingWaypoint").boolValue = position == parent.transform.position;
+        soWaypoint.FindProperty("parentEnemy").objectReferenceValue = parent;
         soWaypoint.ApplyModifiedProperties();
         return waypoint;
     }

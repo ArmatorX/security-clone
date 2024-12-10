@@ -65,9 +65,9 @@ public class SwitchPrefab
     private GameObject wallPrefab;
     private GameObject securityCameraPrefab;
 
-    public GameObject sswitch;
-    public GameObject securityCamera;
-    public GameObject player;
+    private GameObject sswitch;
+    private GameObject securityCamera;
+    private GameObject player;
 
     [SetUp]
     public void SetUp()

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,7 +6,6 @@ public class EnemyEditor : Editor
 {
     private SerializedObject _soEnemy;
     private Enemy _enemy;
-
     private Enemy enemy
     {
         get
@@ -29,21 +27,21 @@ public class EnemyEditor : Editor
                 _soEnemy = new SerializedObject(enemy);
             }
 
-            return _soEnemy;
+            return serializedObject;
         }
     }
 
     public void OnSceneGUI()
-    {
+    { 
         DrawRoute(enemy);
         UpdateStartingWaypointPosition();
     }
 
     private void UpdateStartingWaypointPosition()
     {
-        if (!EditorApplication.isPlaying && enemy.route.Count >= 1)
+        if (!EditorApplication.isPlaying && enemy.Route.Count >= 1 && enemy.Route[0] != null)
         {
-            var startingWaypoint = enemy.route[0];
+            var startingWaypoint = enemy.Route[0];
             startingWaypoint.transform.position = enemy.transform.position;
         }
     }
@@ -52,14 +50,14 @@ public class EnemyEditor : Editor
     {
         if (enemy.HasValidRoute)
         {
-            for (int i = 1; i < enemy.route.Count; i++)
+            for (int i = 1; i < enemy.Route.Count; i++)
             {
                 DrawDottedLine(enemy, i);
             }
 
-            if (enemy.route.Count > 2)
+            if (enemy.Route.Count > 2 && enemy.Route is LoopRoute)
             {
-                DrawDottedLine(enemy, 0, enemy.route.Count - 1);
+                DrawDottedLine(enemy, 0, enemy.Route.Count - 1);
             }
         }
     }
@@ -68,8 +66,8 @@ public class EnemyEditor : Editor
     {
         if (finishWaypointIndex == -1) finishWaypointIndex = startingWaypointIndex - 1;
 
-        var p2 = enemy.route[finishWaypointIndex].transform.position;
-        var p1 = enemy.route[startingWaypointIndex].transform.position;
+        var p2 = enemy.Route[finishWaypointIndex].transform.position;
+        var p1 = enemy.Route[startingWaypointIndex].transform.position;
         Handles.DrawDottedLine(p1, p2, 5);
     }
 
@@ -80,14 +78,14 @@ public class EnemyEditor : Editor
 
         DrawDefaultInspector();
 
-        var buttonText = enemy.route.Count == 0 ? "Create new route" : "Add waypoint to route";
+        var buttonText = enemy.Route.Count == 0 ? "Create new route" : "Add waypoint to route";
 
         if (GUILayout.Button(buttonText))
         {
             AddWaypointToRoute();
         }
 
-        if (enemy.route.Count > 0)
+        if (enemy.Route.Count > 0)
         {
             if (GUILayout.Button("Clear route"))
             {
@@ -104,21 +102,21 @@ public class EnemyEditor : Editor
 
     private void ClearRoute()
     {
-        foreach (GameObject waypoint in enemy.route)
+        foreach (GameObject waypoint in enemy.Route)
         {
             DestroyImmediate(waypoint);
         }
 
-        soEnemy.FindProperty("route").ClearArray();
+        soEnemy.FindProperty("serializableRoute.waypoints").ClearArray();
 
         soEnemy.ApplyModifiedProperties();
     }
 
     private void AddWaypointToRoute()
     {
-        var index = soEnemy.FindProperty("route").arraySize;
-        soEnemy.FindProperty("route").InsertArrayElementAtIndex(index);
-        soEnemy.FindProperty("route.Array.data[" + index + "]").objectReferenceValue = InstantiateWaypoint(index == 0);
-        soEnemy.ApplyModifiedProperties();
+        var index = serializedObject.FindProperty("serializableRoute.waypoints").arraySize;
+        serializedObject.FindProperty("serializableRoute.waypoints").InsertArrayElementAtIndex(index);
+        serializedObject.FindProperty("serializableRoute.waypoints.Array.data[" + index + "]").objectReferenceValue = InstantiateWaypoint(index == 0);
+        serializedObject.ApplyModifiedProperties();
     }
 }

@@ -1,14 +1,20 @@
+using log4net.Core;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class Enemy : MonoBehaviour, EntityWithCoV
+public class Enemy : MonoBehaviour, EntityWithCoV, ISerializationCallbackReceiver
 {
-    public List<GameObject> route;
+    private Route _route;
     public GameObject waypointPrefab;
+    public SerializableRoute serializableRoute;
     public bool HasValidRoute
     {
-        get => route != null && route.Count >= 2;
+        get => Route != null && Route.IsValidRoute;
     }
+    public Route Route { get => _route; set => _route = value; }
+
     [SerializeField]
     private float speed;
     [SerializeField]
@@ -18,19 +24,18 @@ public class Enemy : MonoBehaviour, EntityWithCoV
     [SerializeField]
     private EnemyState state = EnemyState.PATROLLING;
 
-    private Vector3 nextWaypoint;
-    private int indexNextWaypoint = 1;
+    private Vector3 targetPosition;
     private float timeIdle = 0f;
 
     public void Awake()
     {
-        if (route.Count <= 1)
+        if (!Route.IsValidRoute)
         {
             InvalidRoute();
             return;
         }
 
-        UpdateWaypoint();
+        targetPosition = Route.Next.transform.position;
     }
 
     public void Update()
@@ -57,28 +62,28 @@ public class Enemy : MonoBehaviour, EntityWithCoV
     private void InvalidRoute()
     {
         gameObject.SetActive(false);
-        Debug.LogError("Invalid enemy route. The following enemy has only " + route.Count + " waypoints on its route.", gameObject);
+        Debug.LogError("Invalid enemy route. The following enemy has only " + Route.Count + " waypoints on its route.", gameObject);
     }
 
     private void Patrol()
     {
         float step = speed * Time.deltaTime;
 
-        if (Vector3.Distance(transform.position, nextWaypoint) < step)
+        if (Vector3.Distance(transform.position, targetPosition) < step)
         {
-            transform.position = nextWaypoint;
-            SelectNextWaypoint();
+            transform.position = targetPosition; // Correct for error
+            targetPosition = Route.Next.transform.position; // Set next waypoint
             state = EnemyState.IDLE;
             return;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, nextWaypoint, step);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
     }
 
     private void Rotate()
     {
         float step = rotationSpeed * Time.deltaTime;
-        var direction = nextWaypoint - transform.position;
+        var direction = targetPosition - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         if ((Mathf.Abs(angle - transform.eulerAngles.z) < step) || (Mathf.Abs(angle - transform.eulerAngles.z) > 360 - step))
@@ -91,18 +96,6 @@ public class Enemy : MonoBehaviour, EntityWithCoV
         transform.eulerAngles += new Vector3(0, 0, step);
     }
 
-    private void UpdateWaypoint()
-    {
-        nextWaypoint = route[indexNextWaypoint].transform.position;
-    }
-
-    private void SelectNextWaypoint()
-    {
-        indexNextWaypoint++;
-        if (indexNextWaypoint == route.Count) indexNextWaypoint = 0;
-        UpdateWaypoint();
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
@@ -111,6 +104,45 @@ public class Enemy : MonoBehaviour, EntityWithCoV
     public void OnSeenPlayer()
     {
         AlwaysOnScene.GameController.Lose();
+    }
+
+    public void OnBeforeSerialize()
+    {
+        if (Route == null)
+        {
+            return;
+        }
+
+        serializableRoute = new SerializableRoute();
+        if (Route is LoopRoute)
+        {
+            serializableRoute.type = RouteTypes.LOOP;
+        }
+        else if (Route is BackAndForthRoute)
+        {
+            serializableRoute.type = RouteTypes.BACK_AND_FORTH;
+        }
+        serializableRoute.waypoints = new List<GameObject>(Route);
+    }
+
+    public void OnAfterDeserialize()
+    {
+        if (serializableRoute == null)
+        {
+            return;
+        }
+
+        switch (serializableRoute.type)
+        {
+            case RouteTypes.LOOP:
+                Route = new LoopRoute(this);
+                break;
+            case RouteTypes.BACK_AND_FORTH:
+                Route = new BackAndForthRoute(this);
+                break;
+        }
+
+        Route.AddRange(serializableRoute.waypoints);
     }
 }
 

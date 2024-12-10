@@ -11,10 +11,10 @@ public class GoalPrefab
     private GameObject spyPrefab;
     private GameObject wallPrefab;
 
-    public GameObject goal;
-    public GameObject entity;
-    public GameObject gameController;
-    public DummyController dummyController;
+    private GameObject goal;
+    private GameObject entity;
+    private GameObject gameController;
+    private DummyController dummyController;
 
     [SetUp]
     public void SetUp()

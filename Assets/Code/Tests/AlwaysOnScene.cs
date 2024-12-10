@@ -4,7 +4,8 @@ using UnityEngine;
 [TestFixture]
 public class AlwaysOnSceneClass
 {
-    public GameObject gameController;
+    private GameObject gameController;
+
     [TearDown]
     public void TearDown()
     {
